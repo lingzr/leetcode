@@ -102,25 +102,98 @@ public class MostFreqentProblemSolution{
     	ret[0] = 1;
     	return ret;
     }
+
+
+    //198.House Robber
+    public int rob(int[] nums) {
+        int len = nums.length;
+        if(len == 1){
+            return nums[0];
+        }else if(len == 2){
+            return Math.max(nums[1],nums[0]);
+        }else if(len == 0){
+            return 0;
+        }else{
+            int prev1 = nums[0];
+            int prev2 = Math.max(nums[1],nums[0]);
+            for(int i = 2;i<len;i = i+1){
+                int current = Math.max(prev2,prev1+nums[i]);
+                prev1 = prev2;
+                prev2 = current;
+            }
+            return prev2;
+            
+        }
+    }
     //148.sort list
     //need to use merge sort
     public ListNode sortList(ListNode head) {
-        
-        ListNode head1 = head;
-        while(head1 != null){
-        	ListNode min = head1;
-        	while(head2 != null){
-        		if(head2.val < min.val){
-        			min = head2;
-        		}
-        		head2 = head2.next;
-        	}
-        	int temp = min.val;
-        	min.val = head1.val;
-        	head1.val = temp;
 
-        }
-        return head;
+       if(head == null){
+           return head;
+       }else if (head.next == null){
+           return head;
+       }
+       ListNode prev = head;
+       ListNode head1 = head;
+       ListNode head2 = head;
+       while(head2!= null && head2.next != null){//check next & current 
+           prev = head1;
+           head1 = head1.next;
+           head2 = head2.next.next;
+       }
+       System.out.println("here");
+       prev.next = null;
+       ListNode l1 = sortList(head);
+       ListNode l2 = sortList(head1);
+       return merge(l1,l2);
+       
     }
+    
+    private ListNode merge(ListNode l1, ListNode l2){
+        ListNode l = new ListNode(0);
+        ListNode current = l;
+        while(l1 != null && l2 != null){
+            if(l1.val < l2.val){
+                current.next = l1;
+                l1 = l1.next;
+            }else{
+                current.next = l2;
+                l2 = l2.next;
+            }
+            current = current.next;
+        }
+        System.out.println("here2");
+        if(l1 != null){
+            current.next = l1;
+        }else{
+            current.next = l2;
+        }
+        return l.next;
+    }
+
+
+    //Best Time to buy and sell stock
+
+    public int maxProfit(int[] prices){
+        int len = prices.length;
+        if (len == 0) {
+            return 0;
+        }
+        int maxprofit = 0;
+        int min = prices[0];
+        for(int i = 0; i< len; i= i+1){
+            if(prices[i] < min){
+                min = prices[i];
+            }else{
+                int diff = prices[i] - min;
+                if(diff > maxprofit){
+                    maxprofit = diff;
+                }
+            }
+        }
+        return maxprofit;
+    }
+
 
 }
